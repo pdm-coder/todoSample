@@ -1,0 +1,31 @@
+version: '2.3'
+
+services:
+    mysqldb:
+      image: mysql:8.0
+      container_name: mysqldb
+      environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=todoappdb
+      ports:
+        - "3306:3306"
+      restart: always
+      healthcheck:
+        test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+        interval: 30s
+        retries: 5
+        start_period: 120s
+
+
+    todoapp:
+      image: todo-app-springboot
+      container_name: todo-app
+      build:
+        context: . 
+        dockerfile: Dockerfile
+      ports:
+        - "8080:8080"
+      restart: on-failure
+      depends_on:
+        mysqldb:
+          condition: service_healthy
