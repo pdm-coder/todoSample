@@ -3,7 +3,7 @@ package com.sample.todoapp.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,6 +17,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.sample.todoapp.TodoappApplication;
 import com.sample.todoapp.model.EnumStatus;
 import com.sample.todoapp.model.Task;
@@ -52,16 +53,18 @@ public class TaskControllerTest {
 			task.setId(1);
 			task.setName("Reading books");
 			task.setStatus(EnumStatus.TODO);
-			//task.setDate("08-12-2022");
-			task.setDate(new Date());
+			task.setDate(LocalDate.now());
 
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.registerModule(new JavaTimeModule());
+			
 			String json = userJSON.toString();
-			User user = new ObjectMapper().readValue(json, User.class);
+			User user = objectMapper.readValue(json, User.class);
 
 			task.setUser(user);
 
 			String jsonFormattedValues = null;
-			jsonFormattedValues = new ObjectMapper().writeValueAsString(task);
+			jsonFormattedValues = objectMapper.writeValueAsString(task);
 
 			final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
