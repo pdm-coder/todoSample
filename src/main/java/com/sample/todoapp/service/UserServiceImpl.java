@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sample.todoapp.exception.ResourceNotFoundException;
+import com.sample.todoapp.exception.UserNotFoundException;
 import com.sample.todoapp.model.User;
 import com.sample.todoapp.repository.UserRepository;
 
@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 		Optional<User> optionalUser = userRepository.findById(id);
 		
 		if(!optionalUser.isPresent()) {
-			throw new ResourceNotFoundException("User Record not found with id : " + id);
+			throw new UserNotFoundException("User Record not found with id : " + id);
 		}
 		else
 			return optionalUser.get();
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 		Optional<User> optionalUser = userRepository.findById(user.getId());
 		
 		if(!optionalUser.isPresent()) {
-			throw new ResourceNotFoundException("Record not found with id : " + user.getId());
+			throw new UserNotFoundException("Record not found with id : " + user.getId());
 		}
 		else {
 			User updateUser = optionalUser.get();
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 	public void deleteUser(long id) {
 		Optional<User> optionalUser = userRepository.findById(id);
 		if(!optionalUser.isPresent()) {
-			throw new ResourceNotFoundException("User Record not found with id : " + id);
+			throw new UserNotFoundException("User Record not found with id : " + id);
 		}
 		else {
 			userRepository.deleteById(id);;
